@@ -351,4 +351,26 @@ abc
 
 ## Lesson 8 - HTML/Javascript Fund Me
 
-###
+- use `window.ethereum` or `window.solana` to access wallets in browser console. Wallets expose blockchain node (provider object) under the hood i.e. wallets are our connection to the blockchain.
+
+### HTML Setup, Connecting to Metamask
+
+- We will use HTML + javascript in this lesson
+- use ! to auto fill index.html file
+- install live server to be able to spin up HTML website
+- `window.ethereum.request({method: "get_ethAccounts})` will prompt metamask to connect to website
+- added a button and used `document.getElementById("connectButton").innerHTML = "Connected!"` to change button text
+- And then we moved script code to a separate js file
+
+### ES6 Front End JS vs NodeJS
+
+- use import instead of require and do not use npm install
+- to send money to a contract we need provider, signer, contract ABI and contract address
+- copy ethers code from ethers documentation - this is the front end file version
+- In script section of index.html use `type: text/javascript` for only js files and `type: module` once you have imported modules in js file. On changing it to module connect buttons won't work and would be needed to define these in js file as well.
+
+### Sending a Transaction From a website
+
+- use `ethers.providers.Web3Provider` to wrap metamask as a provider and call `getSigner()` method on this provider to get the signer
+- use constants.js file to store ABI and contract address
+-
