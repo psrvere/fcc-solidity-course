@@ -145,19 +145,19 @@ let num = 4;
 
 ## Lesson 7 - Hardhat Fund Me
 
-## 7.1 Linting
+### 7.1 Linting
 
 - eslint is a linter for javascript
 - solhint is a linter for solidity
 - install solhint globally `npm install -g solhint` and initialise with `solhint --init`. Change extents to "solhint:recommended" in json file
 - run with command `solhint contracts/FundMe.sol`
 
-## 7.2 Hardhat Setup
+### 7.2 Hardhat Setup
 
 - setup a new project, `npm init -y` is not needed, `npx install hardhat --save-dev` also initialises the project
 - install @chainlink/contracts library
 
-## 7.3 Hardhat Deploy
+### 7.3 Hardhat Deploy
 
 - What is the problem with deploy scripts?
   - there is no way to track deployments
@@ -167,7 +167,7 @@ let num = 4;
   - `hardhat-deploy` uses `hardhat-deploy-ethers`. We are already using `hardhat-ethers` in place of `ethers`. A few other hardhat plugins may be using `hardhat-ethers`. Hence we install `hardhat-deploy-ethers` in such a way that `hardhat-deplpy-ethers` over rides `hardhat-ethers` and we continue to use `hardhat-ether` i.e. we import `hardhat-ethers` in the confi file. The instruction on how to do so in in the `hardhat-deploy` documentation
   - `hard-deploy` plugin will extend the hre object by adding `getNamedAccounts`, `deployments` and a couple of other things. It will also extend the `HardhatConfig` object by adding `namedAccounts` and a few other config options. `namedAccounts` allows us to associate names to addresses and have them configured per chain.
 
-## 7.4 Mocking and Helper Hardhat Config
+### 7.4 Mocking and Helper Hardhat Config
 
 We have to addres following two challenges while working with Chainlink price feed contracts on hardhat
 
@@ -197,11 +197,11 @@ b) What if we want to change chains for deployment?
 - `npx hardhat deploy --tags mocks` will run all deploy scripts with mocks tag
 - if we spin up the hardhat local node then hardhat-deploy will automatically run all the deploy scripts and start node with our contracts already deployed.
 
-## 7.5 Utils Folder
+### 7.5 Utils Folder
 
 - etherscan contract verification function was moved to utils folder
 
-## 7.6 Solidity Style Guide
+### 7.6 Solidity Style Guide
 
 - Order of Layout
 
@@ -236,7 +236,7 @@ b) What if we want to change chains for deployment?
   - @return
   - @custom:name
 
-## 7.7 Testing Fund Me
+### 7.7 Testing Fund Me
 
 - wrote units tests (run locally) - can be done on local hardhat and forked hardhat network
 - staging/integration tests (run on testnet)
@@ -257,7 +257,7 @@ b) What if we want to change chains for deployment?
 - Solidity create getter function for all public variable automatically by the same name
 - asset.equal can compare two string and not two Big Numbers
 
-## 7.8 Storage in Solidity
+### 7.8 Storage in Solidity
 
 - Immutables and constants are stored as part of the bytecode. How to extract these?
 - `await ethers.provider.getStorageAt(contractAddress,i)` will get the storage variable stored in contract with address contractAddress at i<sup>th</sup> slot.
@@ -332,3 +332,23 @@ abc
   - fixed length arrays of length 10 will take 10 slots with default values
   - dynamic array length is store as 0
 - how does solitiy know if a slot with 0x0 is boolean, uint or an empty dynamic array or a mapping?
+
+### 7.9 Gas Optimizations using storage knowledge
+
+- SSTORE cost 20k gas, SLOAD costs 800
+- created a cheaper withdraw function to reduce gas cost by defining a memory funders array to store storage funder array
+- mappings can not be defined in memory
+
+### 7.10 Solidity Chainlink Style Guide
+
+- changes visibility of storage variables from public to private and wrote getter functions. Why did we do this? - so that the external people who interact with the contract do not have to deal with s_variables.
+
+### 7.11 Staging Tests
+
+- in staging tests we do not need to do `await deployments.fixtures["all"]` or deploy contract as we are assuming contracts are already deployed (units tests will run before staging test). Hence we just get contract.
+- added a ternary operator to skip test if network is not test net `!developmentChains.includes(network.name) ? describe.skip : describe()`
+- run units tests on hardhat network and staging on testnet
+
+## Lesson 8 - HTML/Javascript Fund Me
+
+###

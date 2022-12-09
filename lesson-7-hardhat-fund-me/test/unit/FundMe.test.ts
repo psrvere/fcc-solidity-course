@@ -24,7 +24,7 @@ describe("FundMe", async () => {
     });
 
     it("Should se the price feed contract correctly", async () => {
-      const priceFeedAddress: string = await fundMe.priceFeed();
+      const priceFeedAddress: string = await fundMe.s_priceFeed();
       // assert(priceFeedAddress == mockV3Aggregator.address, "price feed did not match");
       assert.equal(priceFeedAddress, mockV3Aggregator.address, "price feed did not match");
     });
@@ -39,13 +39,13 @@ describe("FundMe", async () => {
 
     it("updates the amount funded data structure", async () => {
       await fundMe.fund({ value: sendValue });
-      const updatedAmount: BigNumber = await fundMe.addressToAmountFunded(deployer);
+      const updatedAmount: BigNumber = await fundMe.s_addressToAmountFunded(deployer);
       assert.equal(updatedAmount.toString(), sendValue.toString(), "Amount did not match");
     });
 
     it("adds the new funder to the array", async () => {
       await fundMe.fund({ value: sendValue });
-      const funder: string = await fundMe.funders(0);
+      const funder: string = await fundMe.s_funders(0);
       assert.equal(funder, deployer, "funder array not updated");
     });
   });
