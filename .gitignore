@@ -9,6 +9,7 @@ typechain-types
 gas-reporter.txt
 coverage.json
 coverage
+lesson-7-hardhat-fund-me/deployments/
 
 # Hardhat files
 cache

@@ -374,3 +374,11 @@ abc
 - use `ethers.providers.Web3Provider` to wrap metamask as a provider and call `getSigner()` method on this provider to get the signer
 - use constants.js file to store ABI and contract address
 -
+
+## Intro to Foundry
+
+### Introduction
+
+- It is written in rust and claims to be very fast
+- `Forge`: Ethereum testing framework. `Cast`: swiss army knife for interacting with smart contracts. `Anvil`: local ethereum node.
+-
