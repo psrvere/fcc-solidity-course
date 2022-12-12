@@ -360,25 +360,44 @@ abc
 - install live server to be able to spin up HTML website
 - `window.ethereum.request({method: "get_ethAccounts})` will prompt metamask to connect to website
 - added a button and used `document.getElementById("connectButton").innerHTML = "Connected!"` to change button text
-- And then we moved script code to a separate js file
+- And then we moved the script code to a separate js file
 
 ### ES6 Front End JS vs NodeJS
 
 - use import instead of require and do not use npm install
-- to send money to a contract we need provider, signer, contract ABI and contract address
 - copy ethers code from ethers documentation - this is the front end file version
 - In script section of index.html use `type: text/javascript` for only js files and `type: module` once you have imported modules in js file. On changing it to module connect buttons won't work and would be needed to define these in js file as well.
 
 ### Sending a Transaction From a website
 
-- use `ethers.providers.Web3Provider` to wrap metamask as a provider and call `getSigner()` method on this provider to get the signer
-- use constants.js file to store ABI and contract address
--
+- to send money to a contract we need contract address, contract ABI and signer
+- use `constants.js` file to store ABI and contract address. ABI is taken from the compiled artifacts folder and contract address is taken by running a local node on hardhat in backend
+- use `const provider = ethers.providers.Web3Provider(window.ethereum)` to wrap metamask as a provider and call `const signer = provider.getSigner()` method on this provider to get the signer
+- create new contract using `const contract = new ethers.Contract(contractAddress, abi, signer)`
+- I added hardhat network to metamask and imported hardhat wallet (#11) too
+- You will have to reset metamask account as and when you restart local blockchain node as nonce on a fresh blockchain should be 0 for first transaction and metamask will have non zero nonce as there were a few transaction done on previous instance of local blockchain.
 
-## Intro to Foundry
+### Listening for Events and completed Transactions
 
-### Introduction
+- we listen for transactions to be mined as well as events
+- use `provider.once(eventName, listener)` to listen to an event (eventName) with a callback function (listener). It is added to the JS event loop and front end periodically checks if this is finished.
+- Other way is to wrap this listeners in a Promise and return it - `new Promise((resolve, reject) => {above function + add resolve()})`
 
-- It is written in rust and claims to be very fast
-- `Forge`: Ethereum testing framework. `Cast`: swiss army knife for interacting with smart contracts. `Anvil`: local ethereum node.
--
+### Input Forms
+
+- for html tags, if you do not want to put anything between them, you can shortened it like this `<input some content />`
+- get input for transfer value using `const ethAmount = document.getElementById("ethAmount").value`
+
+### Reading from the Blockchain
+
+```shell
+const provider = new ethers.providers.Web3Provider(window.ethereum);
+const balance = await provider.getBalance(contractAddress);
+```
+
+### Withdraw Function
+
+- changed the default deployer from 0 to 11 as I added 11 index account to metamask
+- withdraw front end function was similar to fund me function
+
+## Lesson 9 - Hardhat Smart Contract Raffle/Lottery
