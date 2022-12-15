@@ -401,3 +401,54 @@ const balance = await provider.getBalance(contractAddress);
 - withdraw front end function was similar to fund me function
 
 ## Lesson 9 - Hardhat Smart Contract Raffle/Lottery
+
+- `hardhat-toolbox` plugin has following plugins - ethers.js, hardhat-ethers, mocha, chai, hardhat-etherscan, hardhat-gas-reporter, solidity-coverage, typechain, a couple of more plugins
+- extra plugins needs to be installed: hardhat-deploy, dotenv, hardhat-contract-sizer, solhint, prettier, prettier-plugin-solidity
+
+### Introduction to Events
+
+- emit events on update of dynamic data structures
+- Contracts can not access logs data structure after it has been created. Smart contract can only access storage memory but storage memory costs more gas. Events are cheaper that way. Non indexed events are cheaper than indexed events
+- events are stored in logs data structure
+- we can have up to 3 indexed parameters called topics. Indexed parameters are searchable. Non indexed events get abi encoded and you have to know the abi to access these.
+- Logs data structure has 4 fields: 1) contract/account address from where event is emitted, 2) name and fields of event, 3) topics and 4) data - abi encoded non indexed data
+
+### Chainlink VRF Version 2
+
+- In Version 1, we used to fund our contract with link. In version 2 we fund a subscription manager. It is an account which let us fund and maintain balance for multiple consumer contracts
+- There are two contracts used for this:
+  - 1. The VRF Coordinator - `VRFCoordinatorV2Interface` interacts with VRF oracle to get random number using `requestRandomWords` function
+  - 2. The VRF Consumer - `VRFConsumerBaseV2` contract which has `fulfillRandomWords` function to verify the random word. Our Raffle contract inherited `VRFConsumerBaseV2` and we created an instance of `VRFCoordinatorV2Interface` in Raffle contract to get random variable
+  - Add contract address of VRF (Verifiable Random Function) Consumer in subscription dashboard on Chainlink to let it spend Link from subscription manager
+-
+- In `requestRandomWords` function arguments:
+  - `keyHash` or gasLane is the max gas we want to spend while requesting random number using `requestRandomWords` function and `callbackGasLimit` is the max amount of gas we are willing to spend to verify the random number using function `fulfillRandomWords`
+  - `subscriptionId` is the id of subscription which will fund the contract for request
+  - `requestConfirmations` # of confirmations to wait for Chainlink node before responding
+  - `requestRandomWords` returns a requestId
+-
+- `fulfillRandomWords` function arguments:
+
+  - `requestId` is created by `requestRandomWords`
+  - random words array
+
+- Getting random number is a two step process so that no one can fuzz the number: 1) The Request and 2) The Fulfill
+- External functions use less gas than public functions
+
+### Hardhat Shorthand
+
+- `hardhat-shorthand` npm package allows using `hh` in place of `npx hardhat`
+
+### Chainlink Keepers
+
+- we used `KeeperCompatibleInterface`. This contract address needs to registered with Chainlink in Register new Upkeep section: It has two functions
+  - `checkUpkeep` function - run by chainlink Node
+    - `bytes calldata checkData` - a lot of advanced things can be done by using this bytes variable like calling another function etc.
+  - `performUpkeep` function
+- create a new enum type for raffle state variable
+- user `block.timestamp` to get current timestamp
+- if upkeepNeeded is true then contract should automatically call getRandomNumber function - renamed this function to performUpkeep
+- why did he wrap enum in uint256?
+- reset array using `array = new address payable[](0)`
+- calldata doesn't work with strings, we need to pass it as memory variable
+- reading Constant and Immutable data does not count as reading i.e. functions can be pure because the data is stored in bytecode of contract.
