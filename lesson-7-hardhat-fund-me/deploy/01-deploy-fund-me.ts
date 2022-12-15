@@ -7,6 +7,8 @@ const deployFunc: DeployFunction = async (hre: HardhatRuntimeEnvironment) => {
   const { deployments, getNamedAccounts } = hre;
   const { deploy, log, get } = deployments;
   const { deployer } = await getNamedAccounts();
+  console.log("deployer is");
+  console.log(deployer);
   const chainId: number = network.config.chainId!;
 
   let ethUsdPriceFeedAddress: string;
