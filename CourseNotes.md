@@ -452,3 +452,12 @@ const balance = await provider.getBalance(contractAddress);
 - reset array using `array = new address payable[](0)`
 - calldata doesn't work with strings, we need to pass it as memory variable
 - reading Constant and Immutable data does not count as reading i.e. functions can be pure because the data is stored in bytecode of contract.
+
+### Deploy Script
+
+- Deploying mock contract `VRFCoordinatorV2Mock` with
+  - BASE_FEE or Premium: oracle gas for getting 1 random number
+  - GAS_PRICE_LINK: calculated value based on the gas price of the chain. Chainlink nodes pay gas fees of blockchain to give us the random number and for external execution (of upKeep)
+  - price of request = BASE_FEE or Oracle gas (0.25 per request) x GAS_PRICE_LINK (link per gas)
+- use goerli testnet gasLane address for hardhat/localhost - it throws error on being empty
+- For subscription id we did it programatically for hardhat network using function in `VRFCoordinatorV2Mock` and for testnets we got it using the web interface.

@@ -13,7 +13,7 @@ error Raffle__LotteryNotOpen();
 error Raffle__UpkeepNotNeeded(uint256 contractBalance, uint256 numParticipants, uint256 raffleState);
 
 /** @title Sample Raffle contract
- *  @author PSR
+ *  @author psr
  *  @notice This contract will accept funds from participants and declare a random winner at predfefined interval
  *  @dev This implements Chainlink VRF v2 and Keeprs
  */
